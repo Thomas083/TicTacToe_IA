@@ -31,13 +31,13 @@ int main()
     const int NUM_SQUARES = 9;
     vector<char> board(NUM_SQUARES, EMPTY);
 
+    int opponentChoice = askOpponent(); // Choix de l'adversaire
     introductions();
     char human = humanPiece();
     char computer = opponent(human);
     char turn = X;
     displayBoard(board);
 
-    int opponentChoice = askOpponent(); // Choix de l'adversaire
 
     while (winner(board) == NO_ONE)
     {
