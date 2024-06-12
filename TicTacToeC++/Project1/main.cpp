@@ -58,17 +58,16 @@ int main()
 
 void introductions()
 {
-	cout << "Welcome to my Tic Tac Toe Game";
-	cout << "Prepare to lose";
+	cout << "Welcome to my Tic Tac Toe Game\n";
+	cout << "Prepare to lose\n";
 
-	cout << "Make your choice. Chooose a number between 0-8";
+	cout << "Make your choice. Chooose a number between 0-8\n";
 	
-	cout << " 0 | 1 | 2 ";
-	cout << "-----------";
-	cout << " 3 | 4 | 5 ";
-	cout << "-----------";
-	cout << " 6 | 7 | 8 ";
-	cout << "-----------";
+	cout << " 0 | 1 | 2 \n";
+	cout << "-----------\n";
+	cout << " 3 | 4 | 5 \n";
+	cout << "-----------\n";
+	cout << " 6 | 7 | 8 \n\n";
 
 	cout << "Lets begin";
 }
@@ -126,13 +125,12 @@ char opponent(char piece)
 
 void displayBoard(const vector<char>& board)
 {
-	cout << endl;
-	cout << board[0] << " | " << board[1] << " | " << board[2] << endl;
-	cout << "---------" << endl;
-	cout << board[3] << " | " << board[4] << " | " << board[5] << endl;
-	cout << "---------" << endl;
-	cout << board[6] << " | " << board[7] << " | " << board[8] << endl;
-	cout << endl;
+	cout << "\n\t" << board[0] << " | " << board[1] << " | " << board[2];
+	cout << "\n\t" << "---------";
+	cout << "\n\t" << board[3] << " | " << board[4] << " | " << board[5];
+	cout << "\n\t" << "---------";
+	cout << "\n\t" << board[6] << " | " << board[7] << " | " << board[8];
+	cout << "\n\n";
 }
 
 char winner(const vector<char>& board)
@@ -184,3 +182,88 @@ int humanMove(const vector<char>& board, char human)
 	return move;
 }
 
+int computerMove(vector<char> board, char computer)
+{
+	unsigned int move = 0;
+	bool found = false;
+
+	// if computer can win on next move, that's the move to make
+	while (!found && move < board.size())
+	{
+		if (isLegal(move, board))
+		{
+			board[move] = computer;
+			found = winner(board) == computer;
+			board[move] = EMPTY;
+		}
+
+		if (!found)
+		{
+			move++;
+		}
+	}
+
+	// otherwise, if human can win on next move, that's the move to make
+	if (!found)
+	{
+		move = 0;
+		char human = opponent(computer);
+
+		while (!found && move < board.size())
+		{
+			if (isLegal(move, board))
+			{
+				board[move] = human;
+				found = winner(board) == human;
+				board[move] = EMPTY;
+			}
+
+			if (!found)
+			{
+				move++;
+			}
+		}
+	}
+
+	// otherwise, moving to the best open square is the move to make
+	if (!found)
+	{
+		move = 0;
+		unsigned int i = 0;
+		const int BEST_MOVES[] = { 4, 0, 2, 6, 8, 1, 3, 5, 7 };
+
+		// pick best open square
+		while (!found && i < board.size())
+		{
+			move = BEST_MOVES[i];
+			if (isLegal(move, board))
+			{
+				found = true;
+			}
+
+			i++;
+		}
+	}
+
+	cout << "I shall take square number " << move << endl;
+	return move;
+}
+
+void announceWinner(char winner, char computer, char human)
+{
+	if (winner == computer)
+	{
+		cout << winner << " wins!";
+		cout << "As I predicted, human, I am triumphant once more. \n";
+	}
+	else if (winner == human)
+	{
+		cout << winner << " wins!";
+		cout << "No, no! It cannot be! Somehow you tricked me, human. \n";
+	}
+	else
+	{
+		cout << "It's a tie.";
+		cout << "You were most lucky, human, and somehow managed to tie me. \n";
+	}
+}
